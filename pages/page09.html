@@ -35,16 +35,12 @@
 
           <div class="controls">
             <button id="btnEolToggle">EOL: OFF</button>
-            <div class="control">
-              <label>
-                EOL month (relative)
-                <span class="badge" id="eolLabel">+18 months</span>
-              </label>
-              <input id="eol" type="range" min="3" max="30" value="18" />
-            </div>
+            <div class="pill">Click a bar to move the EOL gate.</div>
+            <div class="pill">EOL month (relative): <span class="badge" id="eolLabel">+18 months</span></div>
           </div>
 
           <p class="muted">This only affects future cohorts. Older cohorts still exist and still contribute risk.</p>
+          <button id="backToPage6From9">Back to Page 6</button>
         </div>
       </div>
 
@@ -70,6 +66,7 @@
             <line x1="90" y1="420" x2="810" y2="420" stroke="rgba(255,255,255,0.18)" stroke-width="2"/>
             <text x="92" y="445" fill="rgba(156,163,175,0.95)" font-size="12">Time →</text>
 
+            <rect id="eolClickZone" x="60" y="114" width="780" height="330" fill="transparent" style="cursor: pointer"/>
             <line id="eolLine" x1="0" y1="124" x2="0" y2="434" stroke="rgba(251,191,36,0.95)" stroke-width="3" opacity="0"/>
             <text id="eolLineLabel" x="0" y="110" fill="rgba(251,191,36,0.95)" font-size="12" font-weight="650" opacity="0">EOL</text>
 
