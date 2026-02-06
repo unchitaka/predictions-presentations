@@ -529,58 +529,73 @@ function renderRiskCurve6(){
 /* ---------------------------
    Slide 7: calibration bars
    --------------------------- */
+let page7Calibrated = false;
+const page7AfterScale = 0.5;
+
+function updateCalibrationLabel(){
+  const label = document.getElementById("calibLabel");
+  if(!label) return;
+  if(page7Calibrated){
+    label.textContent = `Scale factor: ${(1 / page7AfterScale).toFixed(2)}`;
+  }else{
+    label.textContent = `Scale factor: ${page7AfterScale.toFixed(2)} (after)`;
+  }
+}
+
 const __btnCalibrate = document.getElementById("btnCalibrate");
 if(__btnCalibrate) __btnCalibrate.addEventListener("click", ()=>{
-  // Toy: define "observed baseline" as recent average of spike data without spike exclusion
-  // Here we emulate: scale so that expected next month aligns with baseline.
-  // observed baseline (toy) = 11 (roughly)
-  const observed = 11.0;
-  const before = expectedComplaintsForOffset(0, {scale:1.0, includeFutureCohorts:false});
-  const newScale = (before > 0) ? (observed / before) : 1.0;
-  state.scale = clamp(newScale, 0.2, 5.0);
-  document.getElementById("calibLabel").textContent = `Scale factor: ${state.scale.toFixed(2)}`;
+  page7Calibrated = !page7Calibrated;
+  __btnCalibrate.textContent = page7Calibrated ? "Reset" : "Calibrate";
+  updateCalibrationLabel();
   renderCalibrationBars(true);
-  // update dependent visuals
-  renderContrib();
-  renderCM();
-  renderEOL();
-  renderOutputExample();
 });
 
 function renderCalibrationBars(animate){
-  const observedH = 160;
-  const before = expectedComplaintsForOffset(0, {scale:1.0, includeFutureCohorts:false});
-  const after = before * state.scale;
+  const bars = svgEl("calibrationBars7");
+  if(!bars) return;
+  const btn = document.getElementById("btnCalibrate");
+  if(btn) btn.textContent = page7Calibrated ? "Reset" : "Calibrate";
 
-  // Map values to bar heights
-  const maxVal = Math.max(11, before, after, 0.001);
-  const mapH = (v)=> clamp((v/maxVal)*160, 8, 160);
+  const offsets = Array.from({length: 24}, (_, i) => i);
+  const actualVals = offsets.map(o => expectedComplaintsForOffset(o, {
+    includeFutureCohorts:true,
+    cmStartIdx: state.cmStartIdx,
+    cmEff: state.cmEff,
+    scale: state.scale
+  }));
+  const beforeVals = actualVals.slice(0, 12);
+  const afterVals = actualVals.slice(12).map(v => page7Calibrated ? v : v * page7AfterScale);
+  const displayVals = beforeVals.concat(afterVals);
 
-  const bObs = svgEl("barObserved");
-  const bBefore = svgEl("barBefore");
-  const bAfter = svgEl("barAfter");
+  const maxV = Math.max(...actualVals, 0.001);
+  const xL=90, xR=810, yBase=300, maxH=150;
+  const w = (xR - xL) / offsets.length;
 
-  const hObs = mapH(11);
-  const hB = mapH(before);
-  const hA = mapH(after);
-
-  // base y at 400, with max 160
-  const yBase = 400;
-
-  const setBar = (bar, h)=>{
-    bar.setAttribute("y", yBase - h);
-    bar.setAttribute("height", h);
-  };
-
-  if(animate){
-    [bBefore,bAfter].forEach(el=>{ el.style.transition = "y 240ms ease, height 240ms ease"; });
-  } else {
-    [bBefore,bAfter].forEach(el=>{ el.style.transition = "none"; });
+  if(bars.children.length !== offsets.length){
+    bars.innerHTML = "";
+    offsets.forEach((_, i)=>{
+      const rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+      const x = xL + i*w + 2;
+      rect.setAttribute("x", x);
+      rect.setAttribute("width", Math.max(2, w-4));
+      rect.setAttribute("rx", 6);
+      rect.setAttribute("stroke", "rgba(255,255,255,0.12)");
+      rect.setAttribute("stroke-width", "1");
+      rect.setAttribute("fill", i < 12 ? "rgba(96,165,250,0.35)" : "url(#g7)");
+      bars.appendChild(rect);
+    });
   }
 
-  setBar(bObs, hObs);
-  setBar(bBefore, hB);
-  setBar(bAfter, hA);
+  Array.from(bars.children).forEach((rect, i)=>{
+    const v = displayVals[i];
+    const h = (v / maxV) * maxH;
+    const y = yBase - h;
+    rect.setAttribute("y", y);
+    rect.setAttribute("height", h);
+    rect.style.transition = animate ? "y 300ms ease, height 300ms ease" : "none";
+  });
+
+  updateCalibrationLabel();
 }
 
 /* ---------------------------
@@ -745,13 +760,61 @@ if(__btnEolToggle) __btnEolToggle.addEventListener("click", ()=>{
   renderEOL();
   renderOutputExample();
 });
-const eolEl = document.getElementById("eol");
-if(eolEl) eolEl.addEventListener("input", ()=>{
-  state.eolRel = parseInt(eolEl.value,10);
-  document.getElementById("eolLabel").textContent = `+${state.eolRel} months`;
-  renderEOL();
-  renderOutputExample();
-});
+const backToPage6From9 = document.getElementById("backToPage6From9");
+if(backToPage6From9) backToPage6From9.addEventListener("click", ()=> showSlide(6));
+
+(() => {
+  const svg = svgEl("viz9");
+  const clickZone = svgEl("eolClickZone");
+  const eolLine = svgEl("eolLine");
+  const eolLabel = svgEl("eolLineLabel");
+  if(!svg || !clickZone || !eolLine || !eolLabel) return;
+  let dragging = false;
+
+  function clientToSvgX(evt){
+    const rect = svg.getBoundingClientRect();
+    const viewBox = svg.viewBox.baseVal;
+    const ratio = viewBox && viewBox.width ? (evt.clientX - rect.left) / rect.width : 0;
+    const x = (viewBox && viewBox.width ? viewBox.x + ratio * viewBox.width : 0);
+    return x;
+  }
+
+  function setFromX(x){
+    const minIdx=-17, maxIdx=30;
+    const xL=90, xR=810;
+    const t = clamp((x - xL)/(xR-xL), 0, 1);
+    const idx = Math.round(minIdx + t*(maxIdx-minIdx));
+    state.eolRel = clamp(idx, 3, 30);
+    if(!state.eolOn){
+      state.eolOn = true;
+      const btn = document.getElementById("btnEolToggle");
+      if(btn) btn.textContent = "EOL: ON";
+    }
+    renderEOL();
+    renderOutputExample();
+    saveStateDebounced();
+  }
+
+  function down(evt){
+    dragging = true;
+    clickZone.setPointerCapture?.(evt.pointerId);
+    setFromX(clientToSvgX(evt));
+  }
+  function move(evt){
+    if(!dragging) return;
+    setFromX(clientToSvgX(evt));
+  }
+  function up(evt){
+    dragging = false;
+    clickZone.releasePointerCapture?.(evt.pointerId);
+  }
+
+  clickZone.addEventListener("pointerdown", down);
+  eolLine.addEventListener("pointerdown", down);
+  eolLabel.addEventListener("pointerdown", down);
+  window.addEventListener("pointermove", move);
+  window.addEventListener("pointerup", up);
+})();
 
 function renderEOL(){
   const g = svgEl("eolCohorts");
@@ -845,6 +908,8 @@ function renderEOL(){
 
   const sum12 = pts.reduce((a,b)=>a+b,0);
   svgEl("eolForecastLabel").textContent = `Expected next 12 months: ${fmt(sum12,1)} (toy)`;
+  const eolLabel = document.getElementById("eolLabel");
+  if(eolLabel) eolLabel.textContent = `+${state.eolRel} months`;
 }
 
 
@@ -1047,13 +1112,12 @@ function applyStateToControls(){
   const eolEl = document.getElementById("eol");
   if(eolEl){
     eolEl.value = String(state.eolRel);
-    const lbl = document.getElementById("eolLabel");
-    if(lbl) lbl.textContent = `+${state.eolRel} months`;
   }
-  const calibLabel = document.getElementById("calibLabel");
-  if(calibLabel){
-    calibLabel.textContent = `Scale factor: ${Number(state.scale).toFixed(2)}`;
+  const eolLabel = document.getElementById("eolLabel");
+  if(eolLabel){
+    eolLabel.textContent = `+${state.eolRel} months`;
   }
+  updateCalibrationLabel();
   const btnContrib = document.getElementById("btnContrib");
   if(btnContrib && (typeof showTop !== "undefined")){
     btnContrib.textContent = (showTop ? "Hide top contributors" : "Show top contributors");
