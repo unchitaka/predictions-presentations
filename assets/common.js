@@ -233,6 +233,7 @@ function animateIntro(){
    --------------------------- */
 ["tapHistory","tapCurve","tapCM"].forEach(id=>{
   const el = document.getElementById(id);
+  if(!el) return;
   el.addEventListener("click", ()=> el.classList.toggle("open"));
 });
 
