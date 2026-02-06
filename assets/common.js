@@ -468,39 +468,40 @@ function renderRiskCurve5(first){
    Slide 6: complaints + risk curve
    --------------------------- */
 function renderComplaints6(){
-  const pathEl = svgEl("complaintsPath6");
-  if(!pathEl) return;
+  const bars = svgEl("complaintsBars6");
+  if(!bars) return;
 
-  const offsets = Array.from({length: 12}, (_, i) => i);
-  const vals = offsets.map(o => expectedComplaintsForOffset(o, {includeFutureCohorts:false}));
-  const maxV = Math.max(...vals, 1);
+  const offsets = Array.from({length: 24}, (_, i) => i);
+  const vals = offsets.map(o => expectedComplaintsForOffset(o, {
+    includeFutureCohorts:true,
+    cmStartIdx: state.cmStartIdx,
+    cmEff: state.cmEff,
+    scale: state.scale
+  }));
+  const maxV = Math.max(...vals, 0.001);
 
-  const x0=90, x1=810, y0=300, y1=150;
-  const pts = vals.map((v,i)=>{
-    const x = x0 + (i/(offsets.length-1))*(x1-x0);
-    const y = y0 - (v/maxV)*(y0-y1);
-    return {x,y};
+  const xL=90, xR=810, yBase=300, maxH=150;
+  const w = (xR - xL) / offsets.length;
+
+  bars.innerHTML = "";
+  vals.forEach((v, i)=>{
+    const h = (v / maxV) * maxH;
+    const x = xL + i*w + 2;
+    const y = yBase - h;
+    const alpha = clamp(0.25 + (v / maxV) * 0.6, 0.25, 0.9);
+    const fill = i === 0 ? "rgba(251,191,36,0.85)" : `rgba(96,165,250,${alpha.toFixed(2)})`;
+
+    const rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+    rect.setAttribute("x", x);
+    rect.setAttribute("y", y);
+    rect.setAttribute("width", Math.max(2, w-4));
+    rect.setAttribute("height", h);
+    rect.setAttribute("rx", 6);
+    rect.setAttribute("fill", fill);
+    rect.setAttribute("stroke", "rgba(255,255,255,0.12)");
+    rect.setAttribute("stroke-width", "1");
+    bars.appendChild(rect);
   });
-
-  const line = pts.map((p,i)=> (i===0 ? `M${p.x},${p.y}` : `L${p.x},${p.y}`)).join(" ");
-  pathEl.setAttribute("d", line);
-
-  const area = `${line} L${x1},${y0} L${x0},${y0} Z`;
-  const areaEl = svgEl("complaintsArea6");
-  if(areaEl) areaEl.setAttribute("d", area);
-
-  const dots = svgEl("complaintsDots6");
-  if(dots){
-    dots.innerHTML = "";
-    pts.forEach((p, i)=>{
-      const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
-      c.setAttribute("cx", p.x);
-      c.setAttribute("cy", p.y);
-      c.setAttribute("r", i === 0 ? "4.5" : "3.2");
-      c.setAttribute("fill", i === 0 ? "rgba(251,191,36,0.95)" : "rgba(96,165,250,0.85)");
-      dots.appendChild(c);
-    });
-  }
 
   const label = svgEl("complaintsLabel6");
   if(label) label.textContent = `Next month: ${fmt(vals[0],1)}`;
@@ -664,7 +665,7 @@ function renderCM(){
 
   // Forecast next 12 months (uses CM effect)
   const pts = [];
-  for(let k=0;k<12;k++){
+  for(let k=0;k<24;k++){
     const v = expectedComplaintsForOffset(k, {
       includeFutureCohorts:true,
       cmStartIdx: state.cmStartIdx,
@@ -676,14 +677,14 @@ function renderCM(){
   const maxV = Math.max(...pts, 0.001);
   const x0=110, x1=820, y0=410, y1=190;
   const d = pts.map((v,i)=>{
-    const x = x0 + (i/11)*(x1-x0);
+    const x = x0 + (i/(pts.length-1))*(x1-x0);
     const y = y0 - (v/maxV)*(y0-y1);
     return (i===0?`M${x},${y}`:`L${x},${y}`);
   }).join(" ");
   svgEl("cmForecast").setAttribute("d", d);
 
-  const sum12 = pts.reduce((a,b)=>a+b,0);
-  svgEl("cmForecastLabel").textContent = `Expected next 12 months: ${fmt(sum12,1)} (toy)`;
+  const sum24 = pts.reduce((a,b)=>a+b,0);
+  svgEl("cmForecastLabel").textContent = `Expected next 24 months: ${fmt(sum24,1)} (toy)`;
 }
 
 // Drag logic for CM line
@@ -707,6 +708,7 @@ function renderCM(){
     const idx = Math.round(minIdx + t*(maxIdx-minIdx));
     state.cmStartIdx = idx;
     renderCM();
+    saveStateDebounced();
   }
 
   function down(evt){
