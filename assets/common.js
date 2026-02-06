@@ -472,13 +472,19 @@ function renderComplaints6(){
   if(!bars) return;
 
   const offsets = Array.from({length: 24}, (_, i) => i);
+  const baselineVals = offsets.map(o => expectedComplaintsForOffset(o, {
+    includeFutureCohorts: true,
+    cmStartIdx: state.cmStartIdx,
+    cmEff: 1.0,
+    scale: state.scale
+  }));
   const vals = offsets.map(o => expectedComplaintsForOffset(o, {
     includeFutureCohorts:true,
     cmStartIdx: state.cmStartIdx,
     cmEff: state.cmEff,
     scale: state.scale
   }));
-  const maxV = Math.max(...vals, 0.001);
+  const maxV = Math.max(...baselineVals, 0.001);
 
   const xL=90, xR=810, yBase=300, maxH=150;
   const w = (xR - xL) / offsets.length;
