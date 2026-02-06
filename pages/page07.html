@@ -52,24 +52,18 @@
             </defs>
             <rect x="0" y="0" width="900" height="520" fill="transparent"/>
             <text x="34" y="56" fill="rgba(229,231,235,0.92)" font-size="18" font-weight="650">Scale the prediction level to match recent history</text>
-            <text x="34" y="82" fill="rgba(156,163,175,0.95)" font-size="13">We keep the shape, but adjust the overall height.</text>
+            <text x="34" y="82" fill="rgba(156,163,175,0.95)" font-size="13">Before = first 12 months; after scaling = second 12 months.</text>
 
-            <rect x="60" y="114" width="780" height="330" rx="16" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.10)"/>
+            <rect x="60" y="110" width="780" height="210" rx="16" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.10)"/>
+            <line x1="90" y1="300" x2="810" y2="300" stroke="rgba(255,255,255,0.20)" stroke-width="2"/>
+            <line x1="90" y1="150" x2="90" y2="300" stroke="rgba(255,255,255,0.20)" stroke-width="2"/>
+            <line x1="450" y1="132" x2="450" y2="300" stroke="rgba(255,255,255,0.25)" stroke-width="2" stroke-dasharray="6 6"/>
+            <text x="150" y="140" fill="rgba(156,163,175,0.95)" font-size="12">Before scaling</text>
+            <text x="560" y="140" fill="rgba(156,163,175,0.95)" font-size="12">After scaling</text>
+            <text x="92" y="320" fill="rgba(156,163,175,0.95)" font-size="12">Months ahead</text>
+            <text x="20" y="185" fill="rgba(156,163,175,0.95)" font-size="12" transform="rotate(-90 20 185)">Complaints</text>
 
-            <text x="120" y="170" fill="rgba(156,163,175,0.95)" font-size="12">Observed baseline</text>
-            <rect x="120" y="190" width="120" height="210" rx="12" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)"/>
-            <rect id="barObserved" x="140" y="240" width="80" height="160" rx="10" fill="rgba(229,231,235,0.28)"/>
-
-            <text x="380" y="170" fill="rgba(156,163,175,0.95)" font-size="12">Before scaling</text>
-            <rect x="380" y="190" width="120" height="210" rx="12" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)"/>
-            <rect id="barBefore" x="400" y="300" width="80" height="100" rx="10" fill="rgba(96,165,250,0.55)"/>
-
-            <text x="640" y="170" fill="rgba(156,163,175,0.95)" font-size="12">After scaling</text>
-            <rect x="640" y="190" width="120" height="210" rx="12" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)"/>
-            <rect id="barAfter" x="660" y="300" width="80" height="100" rx="10" fill="url(#g7)"/>
-
-            <path d="M520,292 C560,280 580,260 610,250" fill="none" stroke="rgba(255,255,255,0.20)" stroke-width="3"/>
-            <polygon points="610,250 598,245 600,258" fill="rgba(255,255,255,0.22)"/>
+            <g id="calibrationBars7"></g>
           </svg>
         </div>
       </div>
