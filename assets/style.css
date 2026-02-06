@@ -210,6 +210,8 @@
       gap:12px;
     }
     .btnrow{display:flex; gap:10px; align-items:center}
+    .preset-buttons{flex-wrap:wrap}
+    .preset-buttons button{min-width:160px; flex:1 1 160px}
     button{
       font:inherit;
       border:none;

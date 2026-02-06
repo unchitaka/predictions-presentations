@@ -29,6 +29,7 @@ const state = {
   // curve params (alpha, beta)
   alpha: 60,     // months
   beta: 3.5,
+  presetTitle: "—",
 
   // calibration
   scale: 1.0,
@@ -315,7 +316,8 @@ function renderCohorts(){
   // Draw bars
   bins.forEach((idx, i) => {
     const machines = machinesPerBin[i];
-    const h = (machines / maxM) * maxH;
+    const showMachines = idx <= nowIdx ? machines : 0;
+    const h = (showMachines / maxM) * maxH;
     const x = xL + i*w + 2;
     const y = yBase - h;
 
@@ -437,6 +439,54 @@ if(betaEl) betaEl.addEventListener("input", ()=>{
   renderComplaints6();
   renderRiskCurve6();
   renderRiskDot();
+});
+
+const presetTitleEl = document.getElementById("presetTitle");
+function applyPreset({alpha, beta, title}){
+  state.alpha = alpha;
+  state.beta = beta;
+  state.presetTitle = title;
+
+  if(alphaEl){
+    alphaEl.value = String(alpha);
+    document.getElementById("alphaLabel").textContent = alpha;
+  }
+  if(betaEl){
+    betaEl.value = String(beta);
+    document.getElementById("betaLabel").textContent = Number(beta).toFixed(1);
+  }
+  if(presetTitleEl) presetTitleEl.textContent = title;
+
+  renderRiskCurve5(false);
+  renderComplaints6();
+  renderRiskCurve6();
+  renderRiskDot();
+  saveStateDebounced();
+}
+
+const presetYoung = document.getElementById("presetYoung");
+if(presetYoung) presetYoung.addEventListener("click", ()=>{
+  applyPreset({
+    alpha: 12,
+    beta: 1.1,
+    title: "測距(P/NP/Sheet)_機能しない"
+  });
+});
+const presetMiddle = document.getElementById("presetMiddle");
+if(presetMiddle) presetMiddle.addEventListener("click", ()=>{
+  applyPreset({
+    alpha: 36,
+    beta: 2.9,
+    title: "レーザー出力_機能しない"
+  });
+});
+const presetOld = document.getElementById("presetOld");
+if(presetOld) presetOld.addEventListener("click", ()=>{
+  applyPreset({
+    alpha: 58,
+    beta: 4.7,
+    title: "内部固視が表示されない"
+  });
 });
 
 let prevPath5 = "";
@@ -767,8 +817,9 @@ if(backToPage6From9) backToPage6From9.addEventListener("click", ()=> showSlide(6
   const svg = svgEl("viz9");
   const clickZone = svgEl("eolClickZone");
   const eolLine = svgEl("eolLine");
+  const eolHandle = svgEl("eolHandle");
   const eolLabel = svgEl("eolLineLabel");
-  if(!svg || !clickZone || !eolLine || !eolLabel) return;
+  if(!svg || !clickZone || !eolLine || !eolLabel || !eolHandle) return;
   let dragging = false;
 
   function clientToSvgX(evt){
@@ -811,6 +862,7 @@ if(backToPage6From9) backToPage6From9.addEventListener("click", ()=> showSlide(6
 
   clickZone.addEventListener("pointerdown", down);
   eolLine.addEventListener("pointerdown", down);
+  eolHandle.addEventListener("pointerdown", down);
   eolLabel.addEventListener("pointerdown", down);
   window.addEventListener("pointermove", move);
   window.addEventListener("pointerup", up);
@@ -868,18 +920,23 @@ function renderEOL(){
 
   // EOL line marker (stable positioning)
   const eolLine = svgEl("eolLine");
+  const eolHandle = svgEl("eolHandle");
   const eolLbl = svgEl("eolLineLabel");
   if(state.eolOn){
     eolLine.setAttribute("opacity","1");
+    eolHandle.setAttribute("opacity","1");
     eolLbl.setAttribute("opacity","1");
 
     const t = (state.eolRel - minIdx) / (maxIdx - minIdx);
     const lineX = xL + clamp(t,0,1)*(xR-xL);
     eolLine.setAttribute("x1", lineX);
     eolLine.setAttribute("x2", lineX);
+    eolHandle.setAttribute("cx", lineX);
+    eolHandle.setAttribute("cy", 124);
     eolLbl.setAttribute("x", clamp(lineX+8, 90, 780));
   }else{
     eolLine.setAttribute("opacity","0");
+    eolHandle.setAttribute("opacity","0");
     eolLbl.setAttribute("opacity","0");
   }
 
@@ -1038,6 +1095,7 @@ function __snapshotState(){
     moveMonths: state.moveMonths,
     alpha: state.alpha,
     beta: state.beta,
+    presetTitle: state.presetTitle,
     scale: state.scale,
     cmEff: state.cmEff,
     cmStartIdx: state.cmStartIdx,
@@ -1064,6 +1122,7 @@ function loadState(){
     if(typeof snap.moveMonths === "number") state.moveMonths = snap.moveMonths;
     if(typeof snap.alpha === "number") state.alpha = snap.alpha;
     if(typeof snap.beta === "number") state.beta = snap.beta;
+    if(typeof snap.presetTitle === "string") state.presetTitle = snap.presetTitle;
     if(typeof snap.scale === "number") state.scale = snap.scale;
 
     if(typeof snap.cmEff === "number") state.cmEff = snap.cmEff;
@@ -1098,6 +1157,10 @@ function applyStateToControls(){
     betaEl.value = String(state.beta);
     const lbl = document.getElementById("betaLabel");
     if(lbl) lbl.textContent = Number(state.beta).toFixed(1);
+  }
+  const presetTitleEl = document.getElementById("presetTitle");
+  if(presetTitleEl){
+    presetTitleEl.textContent = state.presetTitle || "—";
   }
   const cmEffEl = document.getElementById("cmEff");
   if(cmEffEl){
