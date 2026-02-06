@@ -205,7 +205,10 @@ function onEnterSlide(n){
   if(n === 3) renderCohorts();
   if(n === 4) renderRiskDot();
   if(n === 5) renderRiskCurve5(true);
-  if(n === 6) renderContrib();
+  if(n === 6){
+    renderComplaints6();
+    renderRiskCurve6();
+  }
   if(n === 7) renderCalibrationBars(false);
   if(n === 8) renderCM();
   if(n === 9) renderEOL();
@@ -370,6 +373,9 @@ if(agePick) agePick.addEventListener("input", ()=>{
   renderRiskDot();
 });
 function renderRiskDot(){
+  const agePick = document.getElementById("agePick");
+  const riskPath = svgEl("riskPath");
+  if(!agePick || !riskPath) return;
   const alpha = state.alpha, beta = state.beta;
   const pts = riskCurvePoints(alpha,beta,60,61);
 
@@ -379,7 +385,7 @@ function renderRiskDot(){
     const y = y0 - (p.r)*(y0-y1);
     return (i===0?`M${x},${y}`:`L${x},${y}`);
   }).join(" ");
-  svgEl("riskPath").setAttribute("d", path);
+  riskPath.setAttribute("d", path);
 
   const age = parseInt(agePick.value,10);
   const p = pts.find(q=>q.age===age) || pts[0];
@@ -419,6 +425,8 @@ if(alphaEl) alphaEl.addEventListener("input", ()=>{
   state.alpha = parseInt(alphaEl.value,10);
   document.getElementById("alphaLabel").textContent = state.alpha;
   renderRiskCurve5(false);
+  renderComplaints6();
+  renderRiskCurve6();
   // update slide4 too if user goes back
   renderRiskDot();
 });
@@ -426,11 +434,16 @@ if(betaEl) betaEl.addEventListener("input", ()=>{
   state.beta = parseFloat(betaEl.value);
   document.getElementById("betaLabel").textContent = state.beta.toFixed(1);
   renderRiskCurve5(false);
+  renderComplaints6();
+  renderRiskCurve6();
   renderRiskDot();
 });
 
 let prevPath5 = "";
 function renderRiskCurve5(first){
+  const dashed = svgEl("riskPath5b");
+  const solid = svgEl("riskPath5");
+  if(!dashed || !solid) return;
   const pts = riskCurvePoints(state.alpha,state.beta,60,61);
   const x0=90, x1=810, y0=420, y1=160;
   const newPath = pts.map((p,i)=>{
@@ -438,9 +451,6 @@ function renderRiskCurve5(first){
     const y = y0 - (p.r)*(y0-y1);
     return (i===0?`M${x},${y}`:`L${x},${y}`);
   }).join(" ");
-
-  const dashed = svgEl("riskPath5b");
-  const solid = svgEl("riskPath5");
 
   if(first){
     prevPath5 = newPath;
@@ -455,76 +465,58 @@ function renderRiskCurve5(first){
 }
 
 /* ---------------------------
-   Slide 6: contributions + total bucket
+   Slide 6: complaints + risk curve
    --------------------------- */
-let showTop = false;
-const __btnContrib = document.getElementById("btnContrib");
-if(__btnContrib) __btnContrib.addEventListener("click", ()=>{
-  showTop = !showTop;
-  document.getElementById("btnContrib").textContent = showTop ? "Hide top contributors" : "Show top contributors";
-  renderContrib();
-});
+function renderComplaints6(){
+  const pathEl = svgEl("complaintsPath6");
+  if(!pathEl) return;
 
-function renderContrib(){
-  const g = svgEl("contribBars");
-  g.innerHTML = "";
-  // Use a single target month (next month offset 0)
-  const cohorts = buildCohortsForForecast(false,false,state.eolRel); // existing only
-  const alpha=state.alpha, beta=state.beta;
-  const cmEff=state.cmEff, cmStart=state.cmStartIdx;
+  const offsets = Array.from({length: 12}, (_, i) => i);
+  const vals = offsets.map(o => expectedComplaintsForOffset(o, {includeFutureCohorts:false}));
+  const maxV = Math.max(...vals, 1);
 
-  const contrib = cohorts.map(c=>{
-    const age = -c.monthIndex; // at now
-    const r = pFailInMonth(age,alpha,beta);
-    const factor = (c.monthIndex > cmStart) ? cmEff : 1.0;
-    const v = c.machines * r * factor;
-    return {monthIndex:c.monthIndex, machines:c.machines, v};
+  const x0=90, x1=810, y0=300, y1=150;
+  const pts = vals.map((v,i)=>{
+    const x = x0 + (i/(offsets.length-1))*(x1-x0);
+    const y = y0 - (v/maxV)*(y0-y1);
+    return {x,y};
   });
 
-  // Sort contributions
-  const sorted = [...contrib].sort((a,b)=>b.v-a.v);
-  const topSet = new Set(sorted.slice(0,3).map(x=>x.monthIndex));
+  const line = pts.map((p,i)=> (i===0 ? `M${p.x},${p.y}` : `L${p.x},${p.y}`)).join(" ");
+  pathEl.setAttribute("d", line);
 
-  const total = contrib.reduce((s,x)=>s+x.v,0) * state.scale;
-  setText(document.getElementById("sumLabel"), `Expected this month: ${fmt(total,1)}`);
+  const area = `${line} L${x1},${y0} L${x0},${y0} Z`;
+  const areaEl = svgEl("complaintsArea6");
+  if(areaEl) areaEl.setAttribute("d", area);
 
-  // Bucket fill
-  const fill = svgEl("bucketFill");
-  const bucketText = svgEl("bucketText");
-  bucketText.textContent = fmt(total,1);
+  const dots = svgEl("complaintsDots6");
+  if(dots){
+    dots.innerHTML = "";
+    pts.forEach((p, i)=>{
+      const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+      c.setAttribute("cx", p.x);
+      c.setAttribute("cy", p.y);
+      c.setAttribute("r", i === 0 ? "4.5" : "3.2");
+      c.setAttribute("fill", i === 0 ? "rgba(251,191,36,0.95)" : "rgba(96,165,250,0.85)");
+      dots.appendChild(c);
+    });
+  }
 
-  // scale fill height relative to a reference
-  const ref = 120; // toy reference
-  const h = clamp((total/ref)*240, 0, 240);
-  fill.setAttribute("y", 418 - h);
-  fill.setAttribute("height", h);
+  const label = svgEl("complaintsLabel6");
+  if(label) label.textContent = `Next month: ${fmt(vals[0],1)}`;
+}
 
-  // Draw bars (left panel)
-  const x0=90, x1=560, yBase=420, maxH=240;
-  const n = cohorts.length;
-  const w = (x1-x0)/n;
-  const maxV = Math.max(...contrib.map(d=>d.v)) || 1;
-
-  contrib.forEach((d,i)=>{
-    const h2 = (d.v/maxV)*maxH;
-    const x = x0 + i*w + 2;
-    const y = yBase - h2;
-
-    const isTop = topSet.has(d.monthIndex);
-    const fillc = isTop && showTop ? "rgba(251,191,36,0.75)" : "rgba(96,165,250,0.45)";
-    const stroke = isTop && showTop ? "rgba(251,191,36,0.95)" : "rgba(255,255,255,0.12)";
-
-    const rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
-    rect.setAttribute("x", x);
-    rect.setAttribute("y", y);
-    rect.setAttribute("width", Math.max(2, w-4));
-    rect.setAttribute("height", h2);
-    rect.setAttribute("rx", 6);
-    rect.setAttribute("fill", fillc);
-    rect.setAttribute("stroke", stroke);
-    rect.setAttribute("stroke-width","1");
-    g.appendChild(rect);
-  });
+function renderRiskCurve6(){
+  const pathEl = svgEl("riskPath6");
+  if(!pathEl) return;
+  const pts = riskCurvePoints(state.alpha,state.beta,60,61);
+  const x0=90, x1=810, y0=450, y1=370;
+  const path = pts.map((p,i)=>{
+    const x = x0 + (p.age/60)*(x1-x0);
+    const y = y0 - (p.r)*(y0-y1);
+    return (i===0?`M${x},${y}`:`L${x},${y}`);
+  }).join(" ");
+  pathEl.setAttribute("d", path);
 }
 
 /* ---------------------------
@@ -593,6 +585,9 @@ if(cmEffEl) cmEffEl.addEventListener("input", ()=>{
   document.getElementById("cmEffLabel").textContent = `${Math.round(state.cmEff*100)}%`;
   renderCM();
 });
+
+const backToPage6 = document.getElementById("backToPage6");
+if(backToPage6) backToPage6.addEventListener("click", ()=> showSlide(6));
 
 function renderCM(){
   const g = svgEl("cmCohorts");
