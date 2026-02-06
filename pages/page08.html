@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Complaint Prediction Model — Page 8</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="title">
+      <h1>Complaint Prediction Model — Simple Walkthrough</h1>
+      <div class="hint">Deterministic version only (no randomness).</div>
+    </div>
+    <div class="progress">
+      <div id="ptext">8 / 13</div>
+      <div class="bar" aria-hidden="true"><div id="pbar"></div></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="slide active" data-slide="8">
+<div class="card">
+        <div class="card-h">
+          <div class="kicker">Page 8</div>
+          <h2>Countermeasures: reduce after a start date</h2>
+        </div>
+        <div class="card-b">
+          <p class="lead">If a countermeasure starts on a date, machines made after that date contribute less.</p>
+          <p class="muted">In the real model, this uses the configured CM start date and an effectiveness factor.</p>
+
+          <div class="controls">
+            <div class="control">
+              <label>
+                Effect after CM (remaining risk %)
+                <span class="badge" id="cmEffLabel">70%</span>
+              </label>
+              <input id="cmEff" type="range" min="10" max="100" value="70" />
+            </div>
+          </div>
+
+          <div class="pill">Drag the vertical line in the chart to move the CM start date.</div>
+        </div>
+      </div>
+
+      <div class="visual">
+        <div class="top">
+          <div class="label">Visual</div>
+          <div class="mini"><span class="badge">CM start</span><span class="badge">Forecast changes</span></div>
+        </div>
+        <div class="canvas">
+          <svg id="viz8" viewBox="0 0 900 520" role="img" aria-label="Countermeasure start date line">
+            <defs>
+              <linearGradient id="g8" x1="0" x2="1">
+                <stop offset="0" stop-color="rgba(96,165,250,0.82)"/>
+                <stop offset="1" stop-color="rgba(52,211,153,0.78)"/>
+              </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="900" height="520" fill="transparent"/>
+            <text x="34" y="56" fill="rgba(229,231,235,0.92)" font-size="18" font-weight="650">After CM start, new cohorts contribute less</text>
+            <text x="34" y="82" fill="rgba(156,163,175,0.95)" font-size="13">Drag the line: earlier CM → lower forecast (all else equal).</text>
+
+            <rect x="60" y="114" width="780" height="330" rx="16" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.10)"/>
+            <g id="cmCohorts"></g>
+
+            <rect id="cmShade" x="0" y="114" width="0" height="330" fill="rgba(96,165,250,0.10)" opacity="0.9"/>
+            <line id="cmLine" x1="0" y1="124" x2="0" y2="434" stroke="rgba(251,191,36,0.95)" stroke-width="3"/>
+            <circle id="cmHandle" cx="0" cy="124" r="9" fill="rgba(251,191,36,0.95)"/>
+            <text id="cmLineLabel" x="0" y="110" fill="rgba(251,191,36,0.95)" font-size="12" font-weight="650">CM start</text>
+
+            <path id="cmForecast" d="" fill="none" stroke="url(#g8)" stroke-width="4" stroke-linecap="round"/>
+            <text id="cmForecastLabel" x="74" y="462" fill="rgba(156,163,175,0.95)" font-size="12">Expected next 12 months: —</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="btnrow">
+      <button id="prevBtn">Back</button>
+      <button id="nextBtn" class="primary">Next</button>
+    </div>
+    <div class="kbd" aria-hidden="true">
+      Navigate:
+      <span class="key">←</span><span class="key">→</span>
+      <span style="width:10px"></span>
+      Jump:
+      <span class="key">1</span>–<span class="key">9</span>
+    </div>
+  </footer>
+</div>
+
+<script src="../assets/common.js"></script>
+<script>
+  bootPresentationPage(8);
+</script>
+</body>
+</html>

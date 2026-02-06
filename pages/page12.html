@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Complaint Prediction Model — Page 12</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="title">
+      <h1>Complaint Prediction Model — Simple Walkthrough</h1>
+      <div class="hint">Deterministic version only (no randomness).</div>
+    </div>
+    <div class="progress">
+      <div id="ptext">12 / 13</div>
+      <div class="bar" aria-hidden="true"><div id="pbar"></div></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="slide active" data-slide="12">
+<div class="card">
+        <div class="card-h">
+          <div class="kicker">Page 12</div>
+          <h2>Limits (short but explicit)</h2>
+        </div>
+        <div class="card-b">
+          <p class="lead">Predictions can be wrong for simple reasons:</p>
+          <ul class="list">
+            <li><b>Thin or biased history</b> → weak forecast</li>
+            <li><b>Wrong CM dates / effects</b> → wrong result</li>
+            <li><b>Future differs from past</b> in ways not modeled</li>
+          </ul>
+          <p class="muted">The model is most useful when used as a decision aid: compare scenarios (CM earlier/later, EOL yes/no).</p>
+        </div>
+      </div>
+
+      <div class="visual">
+        <div class="top">
+          <div class="label">Visual</div>
+          <div class="mini"><span class="badge">Three failure modes</span></div>
+        </div>
+        <div class="canvas">
+          <svg id="viz12" viewBox="0 0 900 520" role="img" aria-label="Three limit icons">
+            <rect x="0" y="0" width="900" height="520" fill="transparent"/>
+            <text x="34" y="56" fill="rgba(229,231,235,0.92)" font-size="18" font-weight="650">Where forecasts usually fail</text>
+            <text x="34" y="82" fill="rgba(156,163,175,0.95)" font-size="13">Keep these in mind when interpreting results.</text>
+
+            <g transform="translate(60,140)">
+              <rect width="240" height="270" rx="18" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.14)"/>
+              <circle cx="70" cy="70" r="30" fill="rgba(251,191,36,0.18)" stroke="rgba(251,191,36,0.85)" stroke-width="2"/>
+              <text x="120" y="64" fill="rgba(229,231,235,0.92)" font-size="16" font-weight="700">Data quality</text>
+              <text x="24" y="120" fill="rgba(156,163,175,0.95)" font-size="12">Missing / mis-coded</text>
+              <text x="24" y="145" fill="rgba(156,163,175,0.95)" font-size="12">complaints or machine</text>
+              <text x="24" y="170" fill="rgba(156,163,175,0.95)" font-size="12">counts shift the result.</text>
+            </g>
+
+            <g transform="translate(330,140)">
+              <rect width="240" height="270" rx="18" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.14)"/>
+              <circle cx="70" cy="70" r="30" fill="rgba(96,165,250,0.16)" stroke="rgba(96,165,250,0.85)" stroke-width="2"/>
+              <text x="120" y="64" fill="rgba(229,231,235,0.92)" font-size="16" font-weight="700">CM settings</text>
+              <text x="24" y="120" fill="rgba(156,163,175,0.95)" font-size="12">Wrong start date or</text>
+              <text x="24" y="145" fill="rgba(156,163,175,0.95)" font-size="12">effect size makes the</text>
+              <text x="24" y="170" fill="rgba(156,163,175,0.95)" font-size="12">scenario misleading.</text>
+            </g>
+
+            <g transform="translate(600,140)">
+              <rect width="240" height="270" rx="18" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.14)"/>
+              <circle cx="70" cy="70" r="30" fill="rgba(52,211,153,0.14)" stroke="rgba(52,211,153,0.85)" stroke-width="2"/>
+              <text x="120" y="64" fill="rgba(229,231,235,0.92)" font-size="16" font-weight="700">Future shift</text>
+              <text x="24" y="120" fill="rgba(156,163,175,0.95)" font-size="12">New usage patterns,</text>
+              <text x="24" y="145" fill="rgba(156,163,175,0.95)" font-size="12">supplier changes, etc.</text>
+              <text x="24" y="170" fill="rgba(156,163,175,0.95)" font-size="12">can break assumptions.</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="btnrow">
+      <button id="prevBtn">Back</button>
+      <button id="nextBtn" class="primary">Next</button>
+    </div>
+    <div class="kbd" aria-hidden="true">
+      Navigate:
+      <span class="key">←</span><span class="key">→</span>
+      <span style="width:10px"></span>
+      Jump:
+      <span class="key">1</span>–<span class="key">9</span>
+    </div>
+  </footer>
+</div>
+
+<script src="../assets/common.js"></script>
+<script>
+  bootPresentationPage(12);
+</script>
+</body>
+</html>

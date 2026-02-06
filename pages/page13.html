@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Complaint Prediction Model — Page 13</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="title">
+      <h1>Complaint Prediction Model — Simple Walkthrough</h1>
+      <div class="hint">Deterministic version only (no randomness).</div>
+    </div>
+    <div class="progress">
+      <div id="ptext">13 / 13</div>
+      <div class="bar" aria-hidden="true"><div id="pbar"></div></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="slide active" data-slide="13">
+<div class="card">
+        <div class="card-h">
+          <div class="kicker">Page 13</div>
+          <h2>Recap (single screen)</h2>
+        </div>
+        <div class="card-b">
+          <p class="lead">
+            The model estimates complaints by combining:
+            <b>machines by age</b> × <b>age-based risk curve</b>,
+            then adjusting for <b>calibration</b>, <b>countermeasures</b>, and <b>EOL / production</b>.
+          </p>
+          <div class="pill">Use this to compare scenarios (CM earlier/later, EOL yes/no), not as a “perfect oracle”.</div>
+          <p class="muted">You can distribute this HTML as a single file.</p>
+        </div>
+      </div>
+
+      <div class="visual">
+        <div class="top">
+          <div class="label">Visual</div>
+          <div class="mini"><span class="badge">End-to-end flow</span></div>
+        </div>
+        <div class="canvas">
+          <svg id="viz13" viewBox="0 0 900 520" role="img" aria-label="Condensed flow diagram">
+            <defs>
+              <linearGradient id="g13" x1="0" x2="1">
+                <stop offset="0" stop-color="rgba(96,165,250,0.82)"/>
+                <stop offset="1" stop-color="rgba(52,211,153,0.78)"/>
+              </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="900" height="520" fill="transparent"/>
+            <text x="34" y="56" fill="rgba(229,231,235,0.92)" font-size="18" font-weight="650">Pipeline summary</text>
+            <text x="34" y="82" fill="rgba(156,163,175,0.95)" font-size="13">Inputs → transforms → outputs (deterministic).</text>
+
+            <g transform="translate(60,130)">
+              <rect width="230" height="80" rx="16" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.14)"/>
+              <text x="18" y="34" fill="rgba(229,231,235,0.92)" font-size="14" font-weight="700">History</text>
+              <text x="18" y="56" fill="rgba(156,163,175,0.95)" font-size="12">complaints + machines</text>
+            </g>
+
+            <g transform="translate(60,230)">
+              <rect width="230" height="80" rx="16" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.14)"/>
+              <text x="18" y="34" fill="rgba(229,231,235,0.92)" font-size="14" font-weight="700">Aging curve</text>
+              <text x="18" y="56" fill="rgba(156,163,175,0.95)" font-size="12">risk vs age (α, β)</text>
+            </g>
+
+            <g transform="translate(60,330)">
+              <rect width="230" height="80" rx="16" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.14)"/>
+              <text x="18" y="34" fill="rgba(229,231,235,0.92)" font-size="14" font-weight="700">Countermeasures</text>
+              <text x="18" y="56" fill="rgba(156,163,175,0.95)" font-size="12">start date + effect</text>
+            </g>
+
+            <path d="M300,170 C390,170 390,250 470,250" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="3"/>
+            <path d="M300,270 C390,270 390,270 470,270" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="3"/>
+            <path d="M300,370 C390,370 390,290 470,290" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="3"/>
+
+            <g transform="translate(490,180)">
+              <rect width="340" height="210" rx="18" fill="rgba(96,165,250,0.10)" stroke="rgba(96,165,250,0.35)" stroke-width="2"/>
+              <text x="18" y="40" fill="rgba(229,231,235,0.95)" font-size="16" font-weight="800">Prediction (monthly)</text>
+              <text x="18" y="70" fill="rgba(156,163,175,0.95)" font-size="12">machines by cohort age</text>
+              <text x="18" y="92" fill="rgba(156,163,175,0.95)" font-size="12">× risk curve (scaled to history)</text>
+              <text x="18" y="114" fill="rgba(156,163,175,0.95)" font-size="12">adjust CM + EOL/production</text>
+
+              <path d="M30,160 C90,130 140,170 200,135 C250,110 290,140 320,105" fill="none" stroke="url(#g13)" stroke-width="4" stroke-linecap="round"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="btnrow">
+      <button id="prevBtn">Back</button>
+      <button id="nextBtn" class="primary">Next</button>
+    </div>
+    <div class="kbd" aria-hidden="true">
+      Navigate:
+      <span class="key">←</span><span class="key">→</span>
+      <span style="width:10px"></span>
+      Jump:
+      <span class="key">1</span>–<span class="key">9</span>
+    </div>
+  </footer>
+</div>
+
+<script src="../assets/common.js"></script>
+<script>
+  bootPresentationPage(13);
+</script>
+</body>
+</html>

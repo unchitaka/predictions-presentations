@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Complaint Prediction Model — Page 1</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="title">
+      <h1>Complaint Prediction Model — Simple Walkthrough</h1>
+      <div class="hint">Deterministic version only (no randomness).</div>
+    </div>
+    <div class="progress">
+      <div id="ptext">1 / 13</div>
+      <div class="bar" aria-hidden="true"><div id="pbar"></div></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="slide active" data-slide="1">
+<div class="card">
+        <div class="card-h">
+          <div class="kicker">Page 1</div>
+          <h2>What is this model trying to do?</h2>
+        </div>
+        <div class="card-b">
+          <p class="lead">
+            Use past data to estimate <b>future complaint counts</b> by month.
+          </p>
+          <div class="pill">Idea: extend “past → future” with a forecast, then adjust for known changes.</div>
+          <p class="muted">
+            This presentation uses a toy example to demonstrate the logic. The real model runs the same steps on real data.
+          </p>
+        </div>
+      </div>
+
+      <div class="visual">
+        <div class="top">
+          <div class="label">Visual</div>
+          <div class="mini"><span class="badge">Past</span><span class="badge">Future</span></div>
+        </div>
+        <div class="canvas">
+          <svg id="viz1" viewBox="0 0 900 520" role="img" aria-label="Past to future forecast timeline">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1">
+                <stop offset="0" stop-color="rgba(96,165,250,0.85)"/>
+                <stop offset="1" stop-color="rgba(52,211,153,0.80)"/>
+              </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="900" height="520" fill="transparent"/>
+            <text x="34" y="56" fill="rgba(229,231,235,0.92)" font-size="18" font-weight="650">Forecast extends from past into the future</text>
+            <text x="34" y="82" fill="rgba(156,163,175,0.95)" font-size="13">The shaded region is “future months we want to predict”.</text>
+
+            <!-- axis -->
+            <line x1="60" y1="420" x2="840" y2="420" stroke="rgba(255,255,255,0.20)" stroke-width="2"/>
+            <text x="62" y="448" fill="rgba(156,163,175,0.95)" font-size="12">Past</text>
+            <text x="780" y="448" fill="rgba(156,163,175,0.95)" font-size="12">Future</text>
+
+            <!-- future shade -->
+            <rect id="futureShade" x="550" y="110" width="290" height="310" fill="rgba(96,165,250,0.12)" stroke="rgba(96,165,250,0.25)" stroke-width="1.5" rx="14" opacity="0"/>
+
+            <!-- line -->
+            <path id="pastLine" d="M80,380 C180,330 250,360 330,310 C410,260 480,290 550,240" fill="none" stroke="rgba(229,231,235,0.35)" stroke-width="3"/>
+            <path id="forecastLine" d="M550,240 C620,210 690,240 760,200 C800,180 825,170 840,160" fill="none" stroke="url(#g1)" stroke-width="4" stroke-linecap="round" opacity="0"/>
+
+            <circle cx="550" cy="240" r="7" fill="rgba(229,231,235,0.85)"/>
+            <text x="562" y="232" fill="rgba(156,163,175,0.95)" font-size="12">Today</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="btnrow">
+      <button id="prevBtn">Back</button>
+      <button id="nextBtn" class="primary">Next</button>
+    </div>
+    <div class="kbd" aria-hidden="true">
+      Navigate:
+      <span class="key">←</span><span class="key">→</span>
+      <span style="width:10px"></span>
+      Jump:
+      <span class="key">1</span>–<span class="key">9</span>
+    </div>
+  </footer>
+</div>
+
+<script src="../assets/common.js"></script>
+<script>
+  bootPresentationPage(1);
+</script>
+</body>
+</html>

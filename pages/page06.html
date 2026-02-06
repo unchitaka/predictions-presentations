@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Complaint Prediction Model — Page 6</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="title">
+      <h1>Complaint Prediction Model — Simple Walkthrough</h1>
+      <div class="hint">Deterministic version only (no randomness).</div>
+    </div>
+    <div class="progress">
+      <div id="ptext">6 / 13</div>
+      <div class="bar" aria-hidden="true"><div id="pbar"></div></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="slide active" data-slide="6">
+<div class="card">
+        <div class="card-h">
+          <div class="kicker">Page 6</div>
+          <h2>From risk to expected complaint counts</h2>
+        </div>
+        <div class="card-b">
+          <p class="lead">For a target month, the model adds up contributions from every cohort:</p>
+          <div class="callout">
+            <b>Expected complaints this month</b> = Σ (machines in cohort × risk at that cohort’s age)
+          </div>
+          <p class="muted">Toggle “Top contributors” to highlight which cohorts drive the total.</p>
+
+          <div class="controls">
+            <button id="btnContrib" class="">Show top contributors</button>
+            <div class="pill"><span id="sumLabel">Expected this month: —</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="visual">
+        <div class="top">
+          <div class="label">Visual</div>
+          <div class="mini"><span class="badge">Cohort contributions</span><span class="badge">Total</span></div>
+        </div>
+        <div class="canvas">
+          <svg id="viz6" viewBox="0 0 900 520" role="img" aria-label="Cohorts contributing into a total bucket">
+            <defs>
+              <linearGradient id="g6" x1="0" x2="1">
+                <stop offset="0" stop-color="rgba(96,165,250,0.82)"/>
+                <stop offset="1" stop-color="rgba(52,211,153,0.78)"/>
+              </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="900" height="520" fill="transparent"/>
+            <text x="34" y="56" fill="rgba(229,231,235,0.92)" font-size="18" font-weight="650">Cohorts “pour” into a monthly total</text>
+            <text x="34" y="82" fill="rgba(156,163,175,0.95)" font-size="13">Each cohort contributes based on machines × risk at its age.</text>
+
+            <rect x="60" y="114" width="520" height="330" rx="16" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.10)"/>
+            <rect x="610" y="160" width="230" height="280" rx="18" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.14)"/>
+            <text x="648" y="190" fill="rgba(229,231,235,0.92)" font-size="14" font-weight="650">Total</text>
+
+            <rect id="bucketFill" x="628" y="418" width="194" height="0" rx="12" fill="url(#g6)" opacity="0.85"/>
+            <text id="bucketText" x="725" y="320" fill="rgba(229,231,235,0.92)" font-size="22" font-weight="750" text-anchor="middle">—</text>
+            <text x="725" y="346" fill="rgba(156,163,175,0.95)" font-size="12" text-anchor="middle">expected complaints</text>
+
+            <g id="contribBars"></g>
+          </svg>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="btnrow">
+      <button id="prevBtn">Back</button>
+      <button id="nextBtn" class="primary">Next</button>
+    </div>
+    <div class="kbd" aria-hidden="true">
+      Navigate:
+      <span class="key">←</span><span class="key">→</span>
+      <span style="width:10px"></span>
+      Jump:
+      <span class="key">1</span>–<span class="key">9</span>
+    </div>
+  </footer>
+</div>
+
+<script src="../assets/common.js"></script>
+<script>
+  bootPresentationPage(6);
+</script>
+</body>
+</html>

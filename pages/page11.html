@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Complaint Prediction Model — Page 11</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="title">
+      <h1>Complaint Prediction Model — Simple Walkthrough</h1>
+      <div class="hint">Deterministic version only (no randomness).</div>
+    </div>
+    <div class="progress">
+      <div id="ptext">11 / 13</div>
+      <div class="bar" aria-hidden="true"><div id="pbar"></div></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="slide active" data-slide="11">
+<div class="card">
+        <div class="card-h">
+          <div class="kicker">Page 11</div>
+          <h2>What the output means</h2>
+        </div>
+        <div class="card-b">
+          <p class="lead">The output is a monthly series for each target group (e.g., cause/L6).</p>
+          <ul class="list">
+            <li><b>Predicted complaints</b> (monthly)</li>
+            <li><b>Machines in field</b> (by cohort aging + production forecast)</li>
+            <li><b>Implied failure rate</b> (from the aging curve + scaling)</li>
+          </ul>
+          <p class="muted">Some systems also prorate monthly to daily, but the core forecast is monthly.</p>
+        </div>
+      </div>
+
+      <div class="visual">
+        <div class="top">
+          <div class="label">Visual</div>
+          <div class="mini"><span class="badge">Example month</span><span class="badge">Series</span></div>
+        </div>
+        <div class="canvas">
+          <svg id="viz11" viewBox="0 0 900 520" role="img" aria-label="Example output card and series">
+            <defs>
+              <linearGradient id="g11" x1="0" x2="1">
+                <stop offset="0" stop-color="rgba(96,165,250,0.82)"/>
+                <stop offset="1" stop-color="rgba(52,211,153,0.78)"/>
+              </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="900" height="520" fill="transparent"/>
+            <text x="34" y="56" fill="rgba(229,231,235,0.92)" font-size="18" font-weight="650">Output is a monthly series</text>
+            <text x="34" y="82" fill="rgba(156,163,175,0.95)" font-size="13">Example card shows one month; the line shows the series.</text>
+
+            <rect x="60" y="124" width="340" height="280" rx="18" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.14)"/>
+            <text x="86" y="168" fill="rgba(229,231,235,0.92)" font-size="16" font-weight="700">Example: 2027-03</text>
+
+            <text x="86" y="206" fill="rgba(156,163,175,0.95)" font-size="12">Predicted complaints</text>
+            <text id="outCompl" x="86" y="232" fill="rgba(229,231,235,0.95)" font-size="22" font-weight="800">—</text>
+
+            <text x="86" y="272" fill="rgba(156,163,175,0.95)" font-size="12">Machines in field</text>
+            <text id="outMachines" x="86" y="298" fill="rgba(229,231,235,0.95)" font-size="18" font-weight="750">—</text>
+
+            <text x="86" y="338" fill="rgba(156,163,175,0.95)" font-size="12">Implied failure rate</text>
+            <text id="outRate" x="86" y="364" fill="rgba(229,231,235,0.95)" font-size="18" font-weight="750">—</text>
+
+            <rect x="430" y="124" width="410" height="280" rx="18" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.10)"/>
+            <line x1="460" y1="380" x2="820" y2="380" stroke="rgba(255,255,255,0.18)" stroke-width="2"/>
+            <line x1="460" y1="150" x2="460" y2="380" stroke="rgba(255,255,255,0.18)" stroke-width="2"/>
+            <path id="outSeries" d="" fill="none" stroke="url(#g11)" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="btnrow">
+      <button id="prevBtn">Back</button>
+      <button id="nextBtn" class="primary">Next</button>
+    </div>
+    <div class="kbd" aria-hidden="true">
+      Navigate:
+      <span class="key">←</span><span class="key">→</span>
+      <span style="width:10px"></span>
+      Jump:
+      <span class="key">1</span>–<span class="key">9</span>
+    </div>
+  </footer>
+</div>
+
+<script src="../assets/common.js"></script>
+<script>
+  bootPresentationPage(11);
+</script>
+</body>
+</html>

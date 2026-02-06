@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Complaint Prediction Model — Page 2</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="title">
+      <h1>Complaint Prediction Model — Simple Walkthrough</h1>
+      <div class="hint">Deterministic version only (no randomness).</div>
+    </div>
+    <div class="progress">
+      <div id="ptext">2 / 13</div>
+      <div class="bar" aria-hidden="true"><div id="pbar"></div></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="slide active" data-slide="2">
+<div class="card">
+        <div class="card-h">
+          <div class="kicker">Page 2</div>
+          <h2>Three inputs drive the prediction</h2>
+        </div>
+        <div class="card-b">
+          <p class="lead">Think of the model as a machine with three inputs and one output.</p>
+          <div class="grid3">
+            <div class="tapbox" id="tapHistory">
+              <div class="t">1) History</div>
+              <div class="d">Past complaints and machine counts by month</div>
+              <div class="reveal">This anchors the model to what actually happened.</div>
+            </div>
+            <div class="tapbox" id="tapCurve">
+              <div class="t">2) Aging curve</div>
+              <div class="d">How risk changes as machines get older</div>
+              <div class="reveal">Same idea as “wear out” patterns.</div>
+            </div>
+            <div class="tapbox" id="tapCM">
+              <div class="t">3) Countermeasures</div>
+              <div class="d">Start date and effectiveness</div>
+              <div class="reveal">After the start date, new machines contribute less.</div>
+            </div>
+          </div>
+          <p class="muted">Click each box to reveal the one-sentence meaning.</p>
+        </div>
+      </div>
+
+      <div class="visual">
+        <div class="top">
+          <div class="label">Visual</div>
+          <div class="mini"><span class="badge">Inputs</span><span class="badge">Prediction</span></div>
+        </div>
+        <div class="canvas">
+          <svg id="viz2" viewBox="0 0 900 520" role="img" aria-label="Three inputs feeding into one prediction">
+            <defs>
+              <linearGradient id="g2" x1="0" x2="1">
+                <stop offset="0" stop-color="rgba(96,165,250,0.85)"/>
+                <stop offset="1" stop-color="rgba(52,211,153,0.80)"/>
+              </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="900" height="520" fill="transparent"/>
+
+            <rect x="70" y="120" width="250" height="90" rx="16" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.14)"/>
+            <text x="92" y="158" fill="rgba(229,231,235,0.92)" font-size="16" font-weight="650">History</text>
+            <text x="92" y="182" fill="rgba(156,163,175,0.95)" font-size="12">complaints + machines</text>
+
+            <rect x="70" y="230" width="250" height="90" rx="16" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.14)"/>
+            <text x="92" y="268" fill="rgba(229,231,235,0.92)" font-size="16" font-weight="650">Aging curve</text>
+            <text x="92" y="292" fill="rgba(156,163,175,0.95)" font-size="12">risk vs age</text>
+
+            <rect x="70" y="340" width="250" height="90" rx="16" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.14)"/>
+            <text x="92" y="378" fill="rgba(229,231,235,0.92)" font-size="16" font-weight="650">Countermeasures</text>
+            <text x="92" y="402" fill="rgba(156,163,175,0.95)" font-size="12">start date + effect</text>
+
+            <!-- arrows -->
+            <path d="M330,165 C420,165 420,260 520,260" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="3"/>
+            <path d="M330,275 C420,275 420,275 520,275" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="3"/>
+            <path d="M330,385 C420,385 420,290 520,290" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="3"/>
+
+            <!-- output -->
+            <rect x="540" y="190" width="300" height="170" rx="18" fill="rgba(96,165,250,0.10)" stroke="rgba(96,165,250,0.35)" stroke-width="2"/>
+            <text x="565" y="235" fill="rgba(229,231,235,0.95)" font-size="18" font-weight="700">Prediction</text>
+            <text x="565" y="262" fill="rgba(156,163,175,0.95)" font-size="12">future complaint counts (monthly)</text>
+
+            <path d="M560,300 C610,255 650,350 705,280 C745,235 790,295 828,250" fill="none" stroke="url(#g2)" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="btnrow">
+      <button id="prevBtn">Back</button>
+      <button id="nextBtn" class="primary">Next</button>
+    </div>
+    <div class="kbd" aria-hidden="true">
+      Navigate:
+      <span class="key">←</span><span class="key">→</span>
+      <span style="width:10px"></span>
+      Jump:
+      <span class="key">1</span>–<span class="key">9</span>
+    </div>
+  </footer>
+</div>
+
+<script src="../assets/common.js"></script>
+<script>
+  bootPresentationPage(2);
+</script>
+</body>
+</html>

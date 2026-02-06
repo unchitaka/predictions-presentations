@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Complaint Prediction Model — Page 3</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="title">
+      <h1>Complaint Prediction Model — Simple Walkthrough</h1>
+      <div class="hint">Deterministic version only (no randomness).</div>
+    </div>
+    <div class="progress">
+      <div id="ptext">3 / 13</div>
+      <div class="bar" aria-hidden="true"><div id="pbar"></div></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="slide active" data-slide="3">
+<div class="card">
+        <div class="card-h">
+          <div class="kicker">Page 3</div>
+          <h2>Cohorts: machines made in the same month</h2>
+        </div>
+        <div class="card-b">
+          <p class="lead">The model groups machines by <b>manufacturing month</b>. Each month is a “cohort”.</p>
+          <p class="muted">A cohort becomes older over time. The age is what drives its risk.</p>
+
+          <div class="controls">
+            <div class="control">
+              <label>
+                Move time forward (months)
+                <span class="badge" id="cohortMoveLabel">0</span>
+              </label>
+              <input id="cohortMove" type="range" min="0" max="24" value="0" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="visual">
+        <div class="top">
+          <div class="label">Visual</div>
+          <div class="mini"><span class="badge">Cohorts</span><span class="badge">Age</span></div>
+        </div>
+        <div class="canvas">
+          <svg id="viz3" viewBox="0 0 900 520" role="img" aria-label="Cohorts on a timeline">
+			  <rect x="0" y="0" width="900" height="520" fill="transparent"/>
+			  <text x="34" y="56" fill="rgba(229,231,235,0.92)" font-size="18" font-weight="650">Cohorts age as time moves forward</text>
+			  <text x="34" y="82" fill="rgba(156,163,175,0.95)" font-size="13">Bars = machines made each month. The NOW line moves as months pass.</text>
+
+			  <rect x="60" y="114" width="780" height="270" rx="16" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.10)"/>
+			  <line x1="60" y1="420" x2="840" y2="420" stroke="rgba(255,255,255,0.20)" stroke-width="2"/>
+
+			  <text x="60" y="448" fill="rgba(156,163,175,0.95)" font-size="12">Older</text>
+			  <text x="802" y="448" fill="rgba(156,163,175,0.95)" font-size="12">Future</text>
+
+			  <!-- Bars live here -->
+			  <g id="cohortBars"></g>
+
+			  <!-- NOW line -->
+			  <line id="nowLine3" x1="0" y1="124" x2="0" y2="434" stroke="rgba(251,191,36,0.95)" stroke-width="3"/>
+			  <text id="nowLabel3" x="0" y="112" fill="rgba(251,191,36,0.95)" font-size="12" font-weight="650">NOW</text>
+		</svg>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="btnrow">
+      <button id="prevBtn">Back</button>
+      <button id="nextBtn" class="primary">Next</button>
+    </div>
+    <div class="kbd" aria-hidden="true">
+      Navigate:
+      <span class="key">←</span><span class="key">→</span>
+      <span style="width:10px"></span>
+      Jump:
+      <span class="key">1</span>–<span class="key">9</span>
+    </div>
+  </footer>
+</div>
+
+<script src="../assets/common.js"></script>
+<script>
+  bootPresentationPage(3);
+</script>
+</body>
+</html>

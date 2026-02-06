@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Complaint Prediction Model — Page 10</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="title">
+      <h1>Complaint Prediction Model — Simple Walkthrough</h1>
+      <div class="hint">Deterministic version only (no randomness).</div>
+    </div>
+    <div class="progress">
+      <div id="ptext">10 / 13</div>
+      <div class="bar" aria-hidden="true"><div id="pbar"></div></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="slide active" data-slide="10">
+<div class="card">
+        <div class="card-h">
+          <div class="kicker">Page 10</div>
+          <h2>Near-term correction: ignore a one-off spike</h2>
+        </div>
+        <div class="card-b">
+          <p class="lead">The model compares the first forecast month to recent history.</p>
+          <p class="muted">If there is a single abnormal spike, it should not dominate the “recent average”.</p>
+
+          <div class="callout">
+            Mini-game: click the obvious spike month to exclude it from the recent average.
+          </div>
+
+          <div class="controls">
+            <button id="btnResetSpike">Reset</button>
+            <div class="pill"><span id="spikeLabel">Filtered recent average: —</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="visual">
+        <div class="top">
+          <div class="label">Visual</div>
+          <div class="mini"><span class="badge">Recent months</span><span class="badge">Spike filter</span></div>
+        </div>
+        <div class="canvas">
+          <svg id="viz10" viewBox="0 0 900 520" role="img" aria-label="Spike identification on recent history">
+            <rect x="0" y="0" width="900" height="520" fill="transparent"/>
+            <text x="34" y="56" fill="rgba(229,231,235,0.92)" font-size="18" font-weight="650">Recent history can contain a spike</text>
+            <text x="34" y="82" fill="rgba(156,163,175,0.95)" font-size="13">Click a point to mark it as “spike” (excluded from recent average).</text>
+
+            <rect x="60" y="114" width="780" height="330" rx="16" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.10)"/>
+            <line x1="90" y1="420" x2="810" y2="420" stroke="rgba(255,255,255,0.20)" stroke-width="2"/>
+            <line x1="90" y1="160" x2="90" y2="420" stroke="rgba(255,255,255,0.20)" stroke-width="2"/>
+
+            <g id="spikePoints"></g>
+            <line id="spikeAvgLine" x1="90" y1="0" x2="810" y2="0" stroke="rgba(52,211,153,0.70)" stroke-width="3" opacity="0"/>
+            <text id="spikeAvgText" x="810" y="0" fill="rgba(52,211,153,0.85)" font-size="12" text-anchor="end" opacity="0">avg</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="btnrow">
+      <button id="prevBtn">Back</button>
+      <button id="nextBtn" class="primary">Next</button>
+    </div>
+    <div class="kbd" aria-hidden="true">
+      Navigate:
+      <span class="key">←</span><span class="key">→</span>
+      <span style="width:10px"></span>
+      Jump:
+      <span class="key">1</span>–<span class="key">9</span>
+    </div>
+  </footer>
+</div>
+
+<script src="../assets/common.js"></script>
+<script>
+  bootPresentationPage(10);
+</script>
+</body>
+</html>
