@@ -530,15 +530,15 @@ function renderRiskCurve6(){
    Slide 7: calibration bars
    --------------------------- */
 let page7Calibrated = false;
-const page7BeforeScale = 0.55;
+const page7AfterScale = 0.5;
 
 function updateCalibrationLabel(){
   const label = document.getElementById("calibLabel");
   if(!label) return;
   if(page7Calibrated){
-    label.textContent = `Scale factor: ${(1 / page7BeforeScale).toFixed(2)}`;
+    label.textContent = `Scale factor: ${(1 / page7AfterScale).toFixed(2)}`;
   }else{
-    label.textContent = `Scale factor: ${page7BeforeScale.toFixed(2)} (before)`;
+    label.textContent = `Scale factor: ${page7AfterScale.toFixed(2)} (after)`;
   }
 }
 
@@ -563,8 +563,8 @@ function renderCalibrationBars(animate){
     cmEff: state.cmEff,
     scale: state.scale
   }));
-  const beforeVals = actualVals.slice(0, 12).map(v => v * page7BeforeScale);
-  const afterVals = actualVals.slice(12).map(v => page7Calibrated ? v : v * page7BeforeScale);
+  const beforeVals = actualVals.slice(0, 12);
+  const afterVals = actualVals.slice(12).map(v => page7Calibrated ? v : v * page7AfterScale);
   const displayVals = beforeVals.concat(afterVals);
 
   const maxV = Math.max(...actualVals, 0.001);
@@ -766,14 +766,17 @@ if(backToPage6From9) backToPage6From9.addEventListener("click", ()=> showSlide(6
 (() => {
   const svg = svgEl("viz9");
   const clickZone = svgEl("eolClickZone");
-  if(!svg || !clickZone) return;
+  const eolLine = svgEl("eolLine");
+  const eolLabel = svgEl("eolLineLabel");
+  if(!svg || !clickZone || !eolLine || !eolLabel) return;
+  let dragging = false;
 
   function clientToSvgX(evt){
-    const pt = svg.createSVGPoint();
-    pt.x = evt.clientX; pt.y = evt.clientY;
-    const ctm = svg.getScreenCTM().inverse();
-    const sp = pt.matrixTransform(ctm);
-    return sp.x;
+    const rect = svg.getBoundingClientRect();
+    const viewBox = svg.viewBox.baseVal;
+    const ratio = viewBox && viewBox.width ? (evt.clientX - rect.left) / rect.width : 0;
+    const x = (viewBox && viewBox.width ? viewBox.x + ratio * viewBox.width : 0);
+    return x;
   }
 
   function setFromX(x){
@@ -792,9 +795,25 @@ if(backToPage6From9) backToPage6From9.addEventListener("click", ()=> showSlide(6
     saveStateDebounced();
   }
 
-  clickZone.addEventListener("pointerdown", (evt)=>{
+  function down(evt){
+    dragging = true;
+    clickZone.setPointerCapture?.(evt.pointerId);
     setFromX(clientToSvgX(evt));
-  });
+  }
+  function move(evt){
+    if(!dragging) return;
+    setFromX(clientToSvgX(evt));
+  }
+  function up(evt){
+    dragging = false;
+    clickZone.releasePointerCapture?.(evt.pointerId);
+  }
+
+  clickZone.addEventListener("pointerdown", down);
+  eolLine.addEventListener("pointerdown", down);
+  eolLabel.addEventListener("pointerdown", down);
+  window.addEventListener("pointermove", move);
+  window.addEventListener("pointerup", up);
 })();
 
 function renderEOL(){
